@@ -12,8 +12,11 @@ $src = Join-Path $PSScriptRoot "..\src\Trainer.cs"
 $html = Join-Path $PSScriptRoot "..\src\index.html"
 $icon = Join-Path $PSScriptRoot "..\assets\app.ico"
 
+$manifest = Join-Path $PSScriptRoot "app.manifest"
+
 $args = @("/nologo", "/target:winexe", "/langversion:5", "/optimize+", "/out:$out")
 $args += "/win32icon:$icon"
+$args += "/win32manifest:$manifest"
 $args += "/r:$fw\System.Windows.Forms.dll"
 $args += "/r:$fw\System.Drawing.dll"
 $args += "/r:$fw\System.Web.Extensions.dll"
