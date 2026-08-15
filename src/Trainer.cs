@@ -348,7 +348,7 @@ namespace RebirthPubTrainer
         string GetJson(string category)
         {
             Dictionary<string, int> map = game.GetValues(category);
-            if (map == null) return StatusJson(false, "未连接游戏");
+            if (map == null) return null;
             return J(new Dictionary<string, object> { { "type", "values" }, { "category", category }, { "data", map } });
         }
 
