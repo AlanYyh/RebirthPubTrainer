@@ -297,7 +297,7 @@ document.querySelectorAll(".nav").forEach(function(b){ b.onclick = function(){ s
 
 post({type:"hello"});
 switchPage("currency");
-setInterval(function(){ refreshCurrent(); }, 2500);
+setInterval(function(){ post({type:"hello"}); refreshCurrent(); }, 2500);
 </script>
 </body>
 </html>
