@@ -1,6 +1,6 @@
 # Rebirth Pub Trainer
 
-《Rebirth Pub》游戏的修改工具
+《Rebirth Pub》游戏修改工具
 ## 游戏介绍
 《转生居酒屋 / 转生酒馆》（Rebirth Pub）游戏以异世界转生为背景，融合酒馆/旅店经营、多角色养成、沙盒冒险与动态演出内容，由 Seikou Soft. 开发、HimitsuCP 发行的互动模拟经营SLG（Simulation Life Game）游戏，目前处于持续更新状态，如果该修改器，无法使用，请提交issues
 ## 功能
