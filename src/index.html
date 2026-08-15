@@ -5,155 +5,78 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rebirth Pub 修改器</title>
 <style>
-:root{
-  --bg1:#0f1023; --bg2:#1a1140; --bg3:#241456;
-  --card:rgba(255,255,255,0.06);
-  --card-hover:rgba(255,255,255,0.11);
-  --line:rgba(255,255,255,0.10);
-  --text:#eef0ff; --muted:#9aa0c3;
-  --accent1:#6c5ce7; --accent2:#00d2ff; --accent3:#ff5da2;
-  --ok:#2ecc71; --err:#ff6b6b;
-}
 *{box-sizing:border-box; margin:0; padding:0;}
 html,body{height:100%;}
-body{
-  font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;
-  color:var(--text);
-  background:linear-gradient(135deg,var(--bg1),var(--bg2) 50%,var(--bg3));
-  overflow:hidden;
-  -webkit-user-select:none; user-select:none;
-}
-#bg-particles{position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;}
-.p{position:absolute; border-radius:50%; opacity:.18; animation:float linear infinite;}
-@keyframes float{
-  0%{transform:translateY(100vh) translateX(0) scale(1); opacity:.16;}
-  100%{transform:translateY(-12vh) translateX(40px) scale(1.3); opacity:0;}
-}
-#app{position:relative; z-index:1; display:flex; height:100vh;}
-/* sidebar */
+body{font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif; background:#ffffff; color:#333333; overflow:hidden;}
+#app{display:flex; height:100vh;}
 #sidebar{
-  width:188px; flex:0 0 188px;
-  background:rgba(10,12,30,0.55);
-  backdrop-filter:blur(14px);
-  border-right:1px solid var(--line);
-  display:flex; flex-direction:column; padding:18px 12px;
+  width:150px; flex:0 0 150px; background:#f5f6f7; border-right:1px solid #e0e0e0;
+  display:flex; flex-direction:column; padding-top:14px;
 }
-.logo{text-align:center; margin-bottom:18px;}
-.logo .icon{font-size:34px; display:block; animation:bounce 3s ease-in-out infinite;}
-.logo .t{font-size:17px; font-weight:700; letter-spacing:1px;}
-.logo .s{font-size:11px; color:var(--muted);}
-@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+.logo{padding:0 16px 14px; font-size:15px; font-weight:600; border-bottom:1px solid #e0e0e0; margin-bottom:6px;}
 .nav{
-  display:flex; align-items:center; gap:10px;
-  width:100%; padding:12px 14px; margin:4px 0;
-  border:none; border-radius:12px; cursor:pointer;
-  background:transparent; color:var(--muted);
-  font-size:14px; text-align:left;
-  transition:all .22s ease;
+  padding:10px 20px; text-align:left; border:none; background:transparent;
+  cursor:pointer; font-size:14px; color:#333333; width:100%;
 }
-.nav:hover{background:var(--card-hover); color:var(--text); transform:translateX(4px);}
-.nav.active{
-  background:linear-gradient(90deg,var(--accent1),var(--accent2));
-  color:#fff; box-shadow:0 6px 18px rgba(108,92,231,.45);
-}
-.nav .ico{font-size:18px;}
-#conn{
-  margin-top:auto; padding:10px; border-radius:10px; text-align:center;
-  font-size:12px; color:var(--muted); background:var(--card);
-}
-#conn .dot{display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; background:#888;}
-#conn.on .dot{background:var(--ok); box-shadow:0 0 8px var(--ok);}
-#conn.on{color:var(--text);}
-/* main */
-#content{
-  flex:1; overflow-y:auto; padding:26px 30px; position:relative;
-}
-.page-title{font-size:24px; font-weight:700; margin-bottom:4px; letter-spacing:1px;}
-.page-sub{color:var(--muted); font-size:13px; margin-bottom:20px;}
-.grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:14px;}
-.card{
-  background:var(--card); border:1px solid var(--line); border-radius:16px;
-  padding:18px; cursor:pointer; position:relative; overflow:hidden;
-  transition:transform .18s ease, background .18s ease, box-shadow .18s ease;
-}
-.card:hover{transform:translateY(-4px); background:var(--card-hover); box-shadow:0 10px 26px rgba(0,0,0,.35);}
-.card .name{font-size:13px; color:var(--muted);}
-.card .val{font-size:30px; font-weight:800; margin-top:6px; background:linear-gradient(90deg,var(--accent2),var(--accent3)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;}
-.card .ico{position:absolute; right:12px; top:12px; font-size:22px; opacity:.5;}
-.card::after{content:""; position:absolute; left:0; right:0; bottom:0; height:3px; background:linear-gradient(90deg,var(--accent1),var(--accent2),var(--accent3)); opacity:0; transition:opacity .18s;}
-.card:hover::after{opacity:1;}
-.list{display:flex; flex-direction:column; gap:8px;}
-.row{
-  display:flex; align-items:center; justify-content:space-between;
-  padding:12px 16px; border-radius:12px; background:var(--card);
-  border:1px solid var(--line); cursor:pointer; transition:all .16s ease;
-}
-.row:hover{background:var(--card-hover); border-color:var(--accent1); transform:translateX(4px);}
+.nav:hover{background:#ececec;}
+.nav.active{background:#e3effb; color:#1a6fd4; font-weight:600;}
+#conn{margin-top:auto; padding:12px 16px; font-size:12px; color:#777777; border-top:1px solid #e0e0e0;}
+#conn .dot{display:inline-block; width:7px; height:7px; border-radius:50%; background:#bbbbbb; margin-right:6px; vertical-align:middle;}
+#conn.on .dot{background:#1a7f37;}
+#conn.on{color:#333333;}
+#content{flex:1; overflow-y:auto; padding:18px 24px;}
+.page-title{font-size:17px; font-weight:600; margin-bottom:2px;}
+.page-sub{font-size:12px; color:#888888; margin-bottom:12px;}
+.grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:10px;}
+.card{border:1px solid #e0e0e0; border-radius:4px; padding:12px 14px; cursor:pointer; background:#ffffff;}
+.card:hover{border-color:#1a6fd4;}
+.card .name{font-size:13px; color:#666666;}
+.card .val{font-size:22px; font-weight:600; color:#333333; margin-top:2px;}
+.list{border:1px solid #e0e0e0; border-radius:4px; overflow:hidden;}
+.row{display:flex; align-items:center; justify-content:space-between; padding:8px 14px; border-bottom:1px solid #f0f0f0; cursor:pointer; background:#ffffff;}
+.row:last-child{border-bottom:none;}
+.row:hover{background:#f5f8fc;}
 .row .nm{font-size:14px;}
-.row .vl{font-size:16px; font-weight:700; color:var(--accent2); display:flex; align-items:center; gap:8px;}
-.row .pen{font-size:13px; opacity:.4;}
-.group-label{font-size:13px; color:var(--accent2); margin:14px 0 8px; font-weight:700; letter-spacing:1px;}
-.btn{
-  display:inline-flex; align-items:center; gap:8px; padding:12px 20px; border:none;
-  border-radius:12px; cursor:pointer; font-size:14px; color:#fff;
-  background:linear-gradient(90deg,var(--accent1),var(--accent2));
-  transition:transform .15s, box-shadow .15s; box-shadow:0 4px 14px rgba(108,92,231,.35);
-}
-.btn:hover{transform:translateY(-2px); box-shadow:0 8px 20px rgba(108,92,231,.5);}
-.btn.ghost{background:var(--card); color:var(--text); box-shadow:none; border:1px solid var(--line);}
-.btn.ghost:hover{background:var(--card-hover);}
-.btn-row{display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;}
-/* about */
-.about{max-width:680px;}
-.about .big{font-size:26px; font-weight:800;}
-.about .row-item{color:var(--muted); font-size:14px; margin:8px 0; line-height:1.7;}
-.about a{color:var(--accent2); text-decoration:none; border-bottom:1px dashed var(--accent2);}
-.about a:hover{color:#fff;}
-.about .qr-box{display:flex; gap:20px; margin-top:16px;}
-.about .qr-box img{width:180px; height:180px; border-radius:14px; border:1px solid var(--line); background:#fff;}
-.about .qr-cap{text-align:center; font-size:12px; color:var(--muted); margin-top:6px;}
-/* modal */
-#modal{position:fixed; inset:0; z-index:20; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center;}
-#modal.show{display:flex; animation:fadeIn .18s ease;}
-.modal-box{
-  width:340px; background:#1c1e3a; border:1px solid var(--line); border-radius:18px;
-  padding:24px; box-shadow:0 20px 60px rgba(0,0,0,.6); animation:pop .22s cubic-bezier(.2,1.4,.4,1);
-}
-@keyframes pop{from{transform:scale(.8); opacity:0;} to{transform:scale(1); opacity:1;}}
-@keyframes fadeIn{from{opacity:0;} to{opacity:1;}}
-.modal-box h3{font-size:17px; margin-bottom:6px;}
-.modal-box .cur{color:var(--muted); font-size:13px; margin-bottom:14px;}
-.modal-box input{
-  width:100%; padding:12px 14px; border-radius:10px; border:1px solid var(--line);
-  background:#12142c; color:#fff; font-size:16px; outline:none; margin-bottom:16px;
-}
-.modal-box input:focus{border-color:var(--accent2); box-shadow:0 0 0 3px rgba(0,210,255,.15);}
+.row .vl{font-size:14px; color:#1a6fd4;}
+.group-label{font-size:13px; font-weight:600; color:#333333; margin:12px 0 6px;}
+.btn{display:inline-block; padding:8px 20px; border:1px solid #1a6fd4; background:#1a6fd4; color:#ffffff; border-radius:4px; cursor:pointer; font-size:14px;}
+.btn:hover{background:#0f5cb8;}
+.btn.ghost{background:#ffffff; color:#333333; border-color:#cccccc;}
+.btn.ghost:hover{background:#f5f5f5;}
+.btn-row{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px;}
+.about{max-width:720px; line-height:1.9; font-size:14px;}
+.about .big{font-size:18px; font-weight:600; margin-bottom:2px;}
+.about a{color:#1a6fd4; text-decoration:underline;}
+.about .note{color:#999999; font-size:13px;}
+.about .qr-box{display:flex; gap:18px; margin-top:12px;}
+.about .qr-box img{width:160px; height:160px; border:1px solid #e0e0e0; border-radius:4px; background:#ffffff;}
+.about .qr-cap{text-align:center; font-size:12px; color:#666666; margin-top:4px;}
+#modal{position:fixed; inset:0; background:rgba(0,0,0,.3); display:none; align-items:center; justify-content:center; z-index:20;}
+#modal.show{display:flex;}
+.modal-box{width:320px; background:#ffffff; border:1px solid #cccccc; border-radius:4px; padding:20px; box-shadow:0 6px 20px rgba(0,0,0,.15);}
+.modal-box h3{font-size:15px; margin-bottom:4px;}
+.modal-box .cur{color:#888888; font-size:13px; margin-bottom:12px;}
+.modal-box input{width:100%; padding:8px 10px; border:1px solid #cccccc; border-radius:4px; font-size:15px; outline:none; margin-bottom:14px;}
+.modal-box input:focus{border-color:#1a6fd4;}
 .modal-box .btns{display:flex; gap:10px; justify-content:flex-end;}
-/* toast */
-#toast{position:fixed; bottom:26px; left:50%; transform:translateX(-50%) translateY(80px); z-index:30;
-  padding:12px 22px; border-radius:30px; font-size:14px; color:#fff;
-  background:rgba(30,32,58,.95); border:1px solid var(--line); transition:transform .3s cubic-bezier(.2,1.2,.4,1);
-  display:flex; align-items:center; gap:8px; box-shadow:0 10px 30px rgba(0,0,0,.5);}
-#toast.show{transform:translateX(-50%) translateY(0);}
-#toast.ok{border-color:var(--ok);}
-#toast.err{border-color:var(--err);}
-.empty{padding:60px 0; text-align:center; color:var(--muted);}
+#toast{position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#333333; color:#ffffff; padding:8px 18px; border-radius:4px; font-size:13px; display:none; z-index:30;}
+#toast.show{display:block;}
+#toast.ok{background:#1a7f37;}
+#toast.err{background:#c0392b;}
 ::-webkit-scrollbar{width:9px;}
-::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15); border-radius:5px;}
-::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.25);}
+::-webkit-scrollbar-thumb{background:#d0d0d0; border-radius:5px;}
 </style>
 </head>
 <body>
-<div id="bg-particles"></div>
 <div id="app">
   <aside id="sidebar">
-    <div class="logo"><span class="icon">🍺</span><span class="t">Rebirth Pub</span><span class="s">修改器 v1.0</span></div>
-    <button class="nav active" data-page="currency"><span class="ico">💰</span>货币</button>
-    <button class="nav" data-page="heroine"><span class="ico">💕</span>角色</button>
-    <button class="nav" data-page="item"><span class="ico">🎒</span>道具</button>
-    <button class="nav" data-page="skill"><span class="ico">⚔️</span>技能</button>
-    <button class="nav" data-page="gallery"><span class="ico">📖</span>图鉴</button>
-    <button class="nav" data-page="about"><span class="ico">ℹ️</span>关于</button>
+    <div class="logo">Rebirth Pub 修改器</div>
+    <button class="nav active" data-page="currency">货币</button>
+    <button class="nav" data-page="heroine">角色</button>
+    <button class="nav" data-page="item">道具</button>
+    <button class="nav" data-page="skill">技能</button>
+    <button class="nav" data-page="gallery">图鉴</button>
+    <button class="nav" data-page="about">关于</button>
     <div id="conn"><span class="dot"></span><span id="conn-text">连接中…</span></div>
   </aside>
   <main id="content"></main>
@@ -180,9 +103,9 @@ var CURRENCY = [
   {id:"SkillPoint", name:"技能点"}
 ];
 var HEROINES = [
-  {id:"Nicole", name:"妮可 Nicole"},
-  {id:"Irene", name:"艾琳 Irene"},
-  {id:"Serena", name:"瑟蕾娜 Serena"}
+  {id:"Nicole", name:"妮可"},
+  {id:"Irene", name:"艾琳"},
+  {id:"Serena", name:"瑟蕾娜"}
 ];
 var NPCS = [
   {id:"Market_Merchant", name:"市场商人"},
@@ -226,11 +149,11 @@ var SKILLS = [
 
 var state = { page:"currency", values:{}, hello:null };
 var PAGES = {
-  currency:{title:"货币 / 资源", sub:"点击卡片修改数值", cats:["currency"]},
-  heroine:{title:"角色好感度", sub:"点击列表项修改好感度", cats:["heroine","npc"]},
-  item:{title:"道具数量", sub:"点击列表项修改数量", cats:["item"]},
+  currency:{title:"货币", sub:"点击卡片修改数值", cats:["currency"]},
+  heroine:{title:"角色", sub:"点击列表项修改好感度", cats:["heroine","npc"]},
+  item:{title:"道具", sub:"点击列表项修改数量", cats:["item"]},
   skill:{title:"技能", sub:"点击列表项修改等级", cats:["skill"]},
-  gallery:{title:"图鉴 / 收集", sub:"", cats:[]},
+  gallery:{title:"图鉴", sub:"", cats:[]},
   about:{title:"关于", sub:"", cats:[]}
 };
 
@@ -253,9 +176,9 @@ function updateConn(){
 
 function toast(text, ok){
   var el = document.getElementById("toast");
-  el.textContent = (ok?"✅ ":"❌ ") + text;
+  el.textContent = text;
   el.className = ok ? "show ok" : "show err";
-  clearTimeout(el._t); el._t = setTimeout(function(){ el.className = ""; }, 2200);
+  clearTimeout(el._t); el._t = setTimeout(function(){ el.className = ""; }, 2000);
 }
 
 function isCurrent(cat){
@@ -273,10 +196,7 @@ function switchPage(page){
   loadValues();
 }
 
-function loadValues(){
-  PAGES[state.page].cats.forEach(function(c){ post({type:"get", category:c}); });
-}
-
+function loadValues(){ PAGES[state.page].cats.forEach(function(c){ post({type:"get", category:c}); }); }
 function refreshCurrent(){ loadValues(); }
 
 function render(){
@@ -296,11 +216,9 @@ function render(){
 function v(cat, id){ var d = state.values[cat]; return d && d[id] !== undefined ? d[id] : 0; }
 
 function renderCurrency(){
-  var rows = CURRENCY.map(function(it, i){
-    var emoji = ["🪙","💎","⚡","❤️","⭐"][i] || "·";
+  var rows = CURRENCY.map(function(it){
     return '<div class="card" onclick="edit(\'currency\',\''+it.id+'\',\''+it.name+'\')">' +
-      '<span class="ico">'+emoji+'</span><div class="name">'+it.name+'</div>' +
-      '<div class="val">'+v("currency",it.id)+'</div></div>';
+      '<div class="name">'+it.name+'</div><div class="val">'+v("currency",it.id)+'</div></div>';
   }).join("");
   return '<div class="grid">'+rows+'</div>';
 }
@@ -308,37 +226,36 @@ function renderCurrency(){
 function renderHeroine(){
   var h = HEROINES.map(function(it){ return rowHtml("heroine", it.id, it.name); }).join("");
   var n = NPCS.map(function(it){ return rowHtml("npc", it.id, it.name); }).join("");
-  return '<div class="list"><div class="group-label">💕 女主角</div>'+h+'<div class="group-label">🧑‍🤝‍🧑 NPC</div>'+n+'</div>';
+  return '<div class="group-label">女主角</div><div class="list">'+h+'</div><div class="group-label">NPC</div><div class="list">'+n+'</div>';
 }
 
 function renderItems(){
   var rows = ITEMS.map(function(it){ return rowHtml("item", it[0], it[1]); }).join("");
-  return '<div class="btn-row"><button class="btn" onclick="setAll(\'item\',99)">🎒 全部道具 = 99</button>' +
-    '<button class="btn ghost" onclick="setAll(\'item\',999)">全部道具 = 999</button></div><div class="list" style="margin-top:14px">'+rows+'</div>';
+  return '<div class="btn-row"><button class="btn" onclick="setAll(\'item\',99)">全部道具设为 99</button>' +
+    '<button class="btn ghost" onclick="setAll(\'item\',999)">全部道具设为 999</button></div><div class="list">'+rows+'</div>';
 }
 
 function renderSkills(){
+  var sp = rowHtml("skill", "SkillPoint", "技能点");
   var rows = SKILLS.map(function(it){ return rowHtml("skill", it[0], it[1]); }).join("");
-  var sp = rowHtml("skill", "SkillPoint", "技能点 SkillPoint");
-  return '<div class="list"><div class="group-label">⭐ 技能点</div>'+sp+'<div class="group-label">⚔️ 技能等级</div>'+rows+'</div>';
+  return '<div class="group-label">技能点</div><div class="list">'+sp+'</div><div class="group-label">技能等级</div><div class="list">'+rows+'</div>';
 }
 
 function renderGallery(){
-  return '<div class="btn-row" style="flex-direction:column; align-items:flex-start">' +
-    '<button class="btn" onclick="unlock(\'gallery\')">📖 一键解锁全部图鉴</button>' +
-    '<button class="btn" onclick="unlock(\'costume\')">👗 解锁全部服装</button>' +
-    '<button class="btn" onclick="unlock(\'relic\')">🏺 解锁全部遗物</button>' +
-    '<div class="empty" style="padding:20px 0">解锁后进入对应界面即可看到效果</div></div>';
+  return '<div class="btn-row" style="flex-direction:column; align-items:flex-start; gap:8px">' +
+    '<button class="btn" onclick="unlock(\'gallery\')">一键解锁全部图鉴</button>' +
+    '<button class="btn" onclick="unlock(\'costume\')">解锁全部服装</button>' +
+    '<button class="btn" onclick="unlock(\'relic\')">解锁全部遗物</button></div>';
 }
 
 function renderAbout(){
   return '<div class="about">' +
-    '<div class="big">🍺 Rebirth Pub 修改器</div>' +
-    '<div class="row-item">版本 v1.0 &nbsp;·&nbsp; 对应游戏版本 0.65</div>' +
-    '<div class="row-item">本修改器完全免费且开源，地址：<a href="#" onclick="openUrl(\'https://github.com/AlanYyh/RebirthPubTrainer\');return false;">https://github.com/AlanYyh/RebirthPubTrainer</a></div>' +
-    '<div class="row-item">（该项目地址在海外，需要梯子访问）</div>' +
-    '<div class="row-item">如果你是收费获取，投诉你的卖家。</div>' +
-    '<div class="row-item">如果修改器有问题，请向作者提交 issues。</div>' +
+    '<div class="big">Rebirth Pub 修改器</div>' +
+    '<div>版本 v1.0　·　对应游戏版本 0.65</div>' +
+    '<div>本修改器完全免费且开源，地址：<a href="#" onclick="openUrl(\'https://github.com/AlanYyh/RebirthPubTrainer\');return false;">https://github.com/AlanYyh/RebirthPubTrainer</a></div>' +
+    '<div class="note">该项目地址在海外，需要梯子访问</div>' +
+    '<div>如果你是收费获取，投诉你的卖家。</div>' +
+    '<div>如果修改器有问题，请向作者提交 issues。</div>' +
     '<div class="qr-box"><div><img src="{{QR1}}"><div class="qr-cap">赞赏码 1</div></div>' +
     '<div><img src="{{QR2}}"><div class="qr-cap">赞赏码 2</div></div></div>' +
     '</div>';
@@ -346,7 +263,7 @@ function renderAbout(){
 
 function rowHtml(cat, id, name){
   return '<div class="row" onclick="edit(\''+cat+'\',\''+id+'\',\''+name+'\')">' +
-    '<span class="nm">'+name+'</span><span class="vl">'+v(cat,id)+' <span class="pen">✏️</span></span></div>';
+    '<span class="nm">'+name+'</span><span class="vl">'+v(cat,id)+'</span></div>';
 }
 
 function edit(cat, id, name){
@@ -378,24 +295,6 @@ function openUrl(url){ post({type:"open", url:url}); }
 
 document.querySelectorAll(".nav").forEach(function(b){ b.onclick = function(){ switchPage(b.dataset.page); }; });
 
-// floating particles
-(function(){
-  var wrap = document.getElementById("bg-particles");
-  var colors = ["#6c5ce7","#00d2ff","#ff5da2","#2ecc71"];
-  for(var i=0;i<26;i++){
-    var d = document.createElement("div");
-    d.className = "p";
-    var s = 4 + Math.random()*10;
-    d.style.width = s+"px"; d.style.height = s+"px";
-    d.style.left = (Math.random()*100)+"%";
-    d.style.background = colors[Math.floor(Math.random()*colors.length)];
-    d.style.animationDuration = (12 + Math.random()*20)+"s";
-    d.style.animationDelay = (-Math.random()*30)+"s";
-    wrap.appendChild(d);
-  }
-})();
-
-// init
 post({type:"hello"});
 switchPage("currency");
 setInterval(function(){ refreshCurrent(); }, 2500);
