@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rebirth Pub 修改器</title>
+<style>
+:root{
+  --bg1:#0f1023; --bg2:#1a1140; --bg3:#241456;
+  --card:rgba(255,255,255,0.06);
+  --card-hover:rgba(255,255,255,0.11);
+  --line:rgba(255,255,255,0.10);
+  --text:#eef0ff; --muted:#9aa0c3;
+  --accent1:#6c5ce7; --accent2:#00d2ff; --accent3:#ff5da2;
+  --ok:#2ecc71; --err:#ff6b6b;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html,body{height:100%;}
+body{
+  font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;
+  color:var(--text);
+  background:linear-gradient(135deg,var(--bg1),var(--bg2) 50%,var(--bg3));
+  overflow:hidden;
+  -webkit-user-select:none; user-select:none;
+}
+#bg-particles{position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;}
+.p{position:absolute; border-radius:50%; opacity:.18; animation:float linear infinite;}
+@keyframes float{
+  0%{transform:translateY(100vh) translateX(0) scale(1); opacity:.16;}
+  100%{transform:translateY(-12vh) translateX(40px) scale(1.3); opacity:0;}
+}
+#app{position:relative; z-index:1; display:flex; height:100vh;}
+/* sidebar */
+#sidebar{
+  width:188px; flex:0 0 188px;
+  background:rgba(10,12,30,0.55);
+  backdrop-filter:blur(14px);
+  border-right:1px solid var(--line);
+  display:flex; flex-direction:column; padding:18px 12px;
+}
+.logo{text-align:center; margin-bottom:18px;}
+.logo .icon{font-size:34px; display:block; animation:bounce 3s ease-in-out infinite;}
+.logo .t{font-size:17px; font-weight:700; letter-spacing:1px;}
+.logo .s{font-size:11px; color:var(--muted);}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+.nav{
+  display:flex; align-items:center; gap:10px;
+  width:100%; padding:12px 14px; margin:4px 0;
+  border:none; border-radius:12px; cursor:pointer;
+  background:transparent; color:var(--muted);
+  font-size:14px; text-align:left;
+  transition:all .22s ease;
+}
+.nav:hover{background:var(--card-hover); color:var(--text); transform:translateX(4px);}
+.nav.active{
+  background:linear-gradient(90deg,var(--accent1),var(--accent2));
+  color:#fff; box-shadow:0 6px 18px rgba(108,92,231,.45);
+}
+.nav .ico{font-size:18px;}
+#conn{
+  margin-top:auto; padding:10px; border-radius:10px; text-align:center;
+  font-size:12px; color:var(--muted); background:var(--card);
+}
+#conn .dot{display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; background:#888;}
+#conn.on .dot{background:var(--ok); box-shadow:0 0 8px var(--ok);}
+#conn.on{color:var(--text);}
+/* main */
+#content{
+  flex:1; overflow-y:auto; padding:26px 30px; position:relative;
+}
+.page-title{font-size:24px; font-weight:700; margin-bottom:4px; letter-spacing:1px;}
+.page-sub{color:var(--muted); font-size:13px; margin-bottom:20px;}
+.grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:14px;}
+.card{
+  background:var(--card); border:1px solid var(--line); border-radius:16px;
+  padding:18px; cursor:pointer; position:relative; overflow:hidden;
+  transition:transform .18s ease, background .18s ease, box-shadow .18s ease;
+}
+.card:hover{transform:translateY(-4px); background:var(--card-hover); box-shadow:0 10px 26px rgba(0,0,0,.35);}
+.card .name{font-size:13px; color:var(--muted);}
+.card .val{font-size:30px; font-weight:800; margin-top:6px; background:linear-gradient(90deg,var(--accent2),var(--accent3)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;}
+.card .ico{position:absolute; right:12px; top:12px; font-size:22px; opacity:.5;}
+.card::after{content:""; position:absolute; left:0; right:0; bottom:0; height:3px; background:linear-gradient(90deg,var(--accent1),var(--accent2),var(--accent3)); opacity:0; transition:opacity .18s;}
+.card:hover::after{opacity:1;}
+.list{display:flex; flex-direction:column; gap:8px;}
+.row{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 16px; border-radius:12px; background:var(--card);
+  border:1px solid var(--line); cursor:pointer; transition:all .16s ease;
+}
+.row:hover{background:var(--card-hover); border-color:var(--accent1); transform:translateX(4px);}
+.row .nm{font-size:14px;}
+.row .vl{font-size:16px; font-weight:700; color:var(--accent2); display:flex; align-items:center; gap:8px;}
+.row .pen{font-size:13px; opacity:.4;}
+.group-label{font-size:13px; color:var(--accent2); margin:14px 0 8px; font-weight:700; letter-spacing:1px;}
+.btn{
+  display:inline-flex; align-items:center; gap:8px; padding:12px 20px; border:none;
+  border-radius:12px; cursor:pointer; font-size:14px; color:#fff;
+  background:linear-gradient(90deg,var(--accent1),var(--accent2));
+  transition:transform .15s, box-shadow .15s; box-shadow:0 4px 14px rgba(108,92,231,.35);
+}
+.btn:hover{transform:translateY(-2px); box-shadow:0 8px 20px rgba(108,92,231,.5);}
+.btn.ghost{background:var(--card); color:var(--text); box-shadow:none; border:1px solid var(--line);}
+.btn.ghost:hover{background:var(--card-hover);}
+.btn-row{display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;}
+/* about */
+.about{max-width:680px;}
+.about .big{font-size:26px; font-weight:800;}
+.about .row-item{color:var(--muted); font-size:14px; margin:8px 0; line-height:1.7;}
+.about a{color:var(--accent2); text-decoration:none; border-bottom:1px dashed var(--accent2);}
+.about a:hover{color:#fff;}
+.about .qr-box{display:flex; gap:20px; margin-top:16px;}
+.about .qr-box img{width:180px; height:180px; border-radius:14px; border:1px solid var(--line); background:#fff;}
+.about .qr-cap{text-align:center; font-size:12px; color:var(--muted); margin-top:6px;}
+/* modal */
+#modal{position:fixed; inset:0; z-index:20; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center;}
+#modal.show{display:flex; animation:fadeIn .18s ease;}
+.modal-box{
+  width:340px; background:#1c1e3a; border:1px solid var(--line); border-radius:18px;
+  padding:24px; box-shadow:0 20px 60px rgba(0,0,0,.6); animation:pop .22s cubic-bezier(.2,1.4,.4,1);
+}
+@keyframes pop{from{transform:scale(.8); opacity:0;} to{transform:scale(1); opacity:1;}}
+@keyframes fadeIn{from{opacity:0;} to{opacity:1;}}
+.modal-box h3{font-size:17px; margin-bottom:6px;}
+.modal-box .cur{color:var(--muted); font-size:13px; margin-bottom:14px;}
+.modal-box input{
+  width:100%; padding:12px 14px; border-radius:10px; border:1px solid var(--line);
+  background:#12142c; color:#fff; font-size:16px; outline:none; margin-bottom:16px;
+}
+.modal-box input:focus{border-color:var(--accent2); box-shadow:0 0 0 3px rgba(0,210,255,.15);}
+.modal-box .btns{display:flex; gap:10px; justify-content:flex-end;}
+/* toast */
+#toast{position:fixed; bottom:26px; left:50%; transform:translateX(-50%) translateY(80px); z-index:30;
+  padding:12px 22px; border-radius:30px; font-size:14px; color:#fff;
+  background:rgba(30,32,58,.95); border:1px solid var(--line); transition:transform .3s cubic-bezier(.2,1.2,.4,1);
+  display:flex; align-items:center; gap:8px; box-shadow:0 10px 30px rgba(0,0,0,.5);}
+#toast.show{transform:translateX(-50%) translateY(0);}
+#toast.ok{border-color:var(--ok);}
+#toast.err{border-color:var(--err);}
+.empty{padding:60px 0; text-align:center; color:var(--muted);}
+::-webkit-scrollbar{width:9px;}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15); border-radius:5px;}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.25);}
+</style>
+</head>
+<body>
+<div id="bg-particles"></div>
+<div id="app">
+  <aside id="sidebar">
+    <div class="logo"><span class="icon">🍺</span><span class="t">Rebirth Pub</span><span class="s">修改器 v1.0</span></div>
+    <button class="nav active" data-page="currency"><span class="ico">💰</span>货币</button>
+    <button class="nav" data-page="heroine"><span class="ico">💕</span>角色</button>
+    <button class="nav" data-page="item"><span class="ico">🎒</span>道具</button>
+    <button class="nav" data-page="skill"><span class="ico">⚔️</span>技能</button>
+    <button class="nav" data-page="gallery"><span class="ico">📖</span>图鉴</button>
+    <button class="nav" data-page="about"><span class="ico">ℹ️</span>关于</button>
+    <div id="conn"><span class="dot"></span><span id="conn-text">连接中…</span></div>
+  </aside>
+  <main id="content"></main>
+</div>
+<div id="modal">
+  <div class="modal-box">
+    <h3 id="m-title">修改</h3>
+    <div class="cur" id="m-cur"></div>
+    <input id="m-input" type="number" inputmode="numeric">
+    <div class="btns">
+      <button class="btn ghost" id="m-cancel">取消</button>
+      <button class="btn" id="m-ok">确定</button>
+    </div>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script>
+var CURRENCY = [
+  {id:"Gold", name:"金币"},
+  {id:"SoulJam", name:"魂石"},
+  {id:"AP", name:"行动点"},
+  {id:"Stamina", name:"体力"},
+  {id:"SkillPoint", name:"技能点"}
+];
+var HEROINES = [
+  {id:"Nicole", name:"妮可 Nicole"},
+  {id:"Irene", name:"艾琳 Irene"},
+  {id:"Serena", name:"瑟蕾娜 Serena"}
+];
+var NPCS = [
+  {id:"Market_Merchant", name:"市场商人"},
+  {id:"BlackMarket_Merchant", name:"黑市商人"},
+  {id:"Clown", name:"小丑"},
+  {id:"Priest", name:"神父"},
+  {id:"Elena", name:"艾莲娜"},
+  {id:"Marie", name:"玛丽"},
+  {id:"Logan", name:"罗根"},
+  {id:"Nix", name:"尼克斯"},
+  {id:"Bob", name:"鲍勃"},
+  {id:"Runa", name:"露娜"},
+  {id:"Teddy", name:"泰迪"},
+  {id:"Jack", name:"杰克"},
+  {id:"Charlotte", name:"夏洛特"}
+];
+var ITEMS = [
+  ["NormalRecipePiece","普通食谱碎片"],["RareRecipePiece","稀有食谱碎片"],["LegendaryRecipePiece","传说食谱碎片"],
+  ["NormalCostumePiece","普通服装碎片"],["RareCostumePiece","稀有服装碎片"],["LegendaryCostumePiece","传说服装碎片"],
+  ["NormalRelicPiece","普通遗物碎片"],["RareRelicPiece","稀有遗物碎片"],["LegendaryRelicPiece","传说遗物碎片"],
+  ["Ruby","红宝石"],["Sapphire","蓝宝石"],["Emerald","绿宝石"],["Topaz","黄玉"],
+  ["NormalRecipe","普通食谱"],["RareRecipe","稀有食谱"],["LegendaryRecipe","传说食谱"],
+  ["Chocolate","巧克力"],["EnergyBar","能量棒"],["EnergyDrink","能量饮料"],
+  ["LegendaryMushroom","传说蘑菇"],["HolyWater","圣水"],["CookieSet","曲奇套装"],["StrawberryCake","草莓蛋糕"],
+  ["Bouquet","花束"],["PoetryBook","诗集"],["LuxuryPerfume","高级香水"],["StuffedDoll","玩偶"],
+  ["LuxuryCushion","高级靠垫"],["SnowGlobe","雪花球"],["SilkScarf","丝巾"],["VintageWine","陈年红酒"],
+  ["JewelMusicBox","宝石音乐盒"],["LovePotion","爱情药水"],["RedPetal","红色花瓣"],["BluePetal","蓝色花瓣"],
+  ["SkillBook","技能书"],["AdvSkillBook","高级技能书"],["MagicalTeaLeaf","魔法茶叶"],["SacredTeaLeaf","神圣茶叶"],
+  ["MysteryBox","神秘盒子"],["AdvMysteryBox","高级神秘盒子"],
+  ["SecretMapA","秘密地图A"],["SecretMapB","秘密地图B"],["SecretMapC","秘密地图C"],["SecretMapD","秘密地图D"]
+];
+var SKILLS = [
+  ["PowerUp_01","攻击强化"],["AvoidUp_01","闪避强化"],["PowerUp_02","攻击强化 II"],["Turret_01","炮塔"],
+  ["LuckUp_01","幸运强化"],["TurretPowerUp_01","炮塔强化"],["MoreTurret_01","炮塔 +1"],["LuckUp_02","幸运强化 II"],
+  ["MoveSpeedUp_01","移速强化"],["Protector_01","护盾"],["AvoidUp_02","闪避强化 II"],["ProtectorUpgrade_01","护盾强化"],
+  ["Rebirth_01","重生"],["AttackSpeedUp_01","攻速强化"],["Magnetic_01","磁力"],["IceFairy_01","冰精灵"],
+  ["MaxHP_01","生命上限"],["IceFairySlowUpgrade_01","冰精灵减速强化"],["MoreIceFairy_01","冰精灵 +1"],["MaxHP_02","生命上限 II"],
+  ["BetterPotion","强化药水"],["ChainAttack_01","连锁攻击"],["AttackSpeedUp_02","攻速强化 II"],["ChainAttackUpgrade_01","连锁攻击强化"],
+  ["ImmediateDeath","即死"]
+];
+
+var state = { page:"currency", values:{}, hello:null };
+var PAGES = {
+  currency:{title:"货币 / 资源", sub:"点击卡片修改数值", cats:["currency"]},
+  heroine:{title:"角色好感度", sub:"点击列表项修改好感度", cats:["heroine","npc"]},
+  item:{title:"道具数量", sub:"点击列表项修改数量", cats:["item"]},
+  skill:{title:"技能", sub:"点击列表项修改等级", cats:["skill"]},
+  gallery:{title:"图鉴 / 收集", sub:"", cats:[]},
+  about:{title:"关于", sub:"", cats:[]}
+};
+
+function post(m){ if(window.chrome && chrome.webview){ chrome.webview.postMessage(m); } }
+function onMsg(e){
+  var m = typeof e.data === "string" ? JSON.parse(e.data) : e.data;
+  if(m.type === "hello"){ state.hello = m; updateConn(); }
+  else if(m.type === "values"){ state.values[m.category] = m.data; if(isCurrent(m.category)) render(); }
+  else if(m.type === "status"){ toast(m.text||"", m.ok!==false); if(m.ok) refreshCurrent(); }
+}
+if(window.chrome && chrome.webview){ chrome.webview.addEventListener("message", onMsg); }
+
+function updateConn(){
+  var el = document.getElementById("conn");
+  var txt = document.getElementById("conn-text");
+  if(state.hello && state.hello.state === "ready"){ el.classList.add("on"); txt.textContent = "已连接游戏"; }
+  else if(state.hello && state.hello.state === "notready"){ el.classList.remove("on"); txt.textContent = "游戏未载入存档"; }
+  else { el.classList.remove("on"); txt.textContent = "未连接游戏"; }
+}
+
+function toast(text, ok){
+  var el = document.getElementById("toast");
+  el.textContent = (ok?"✅ ":"❌ ") + text;
+  el.className = ok ? "show ok" : "show err";
+  clearTimeout(el._t); el._t = setTimeout(function(){ el.className = ""; }, 2200);
+}
+
+function isCurrent(cat){
+  if(state.page === "currency") return cat === "currency";
+  if(state.page === "heroine") return cat === "heroine" || cat === "npc";
+  if(state.page === "item") return cat === "item";
+  if(state.page === "skill") return cat === "skill";
+  return false;
+}
+
+function switchPage(page){
+  state.page = page;
+  document.querySelectorAll(".nav").forEach(function(b){ b.classList.toggle("active", b.dataset.page === page); });
+  render();
+  loadValues();
+}
+
+function loadValues(){
+  PAGES[state.page].cats.forEach(function(c){ post({type:"get", category:c}); });
+}
+
+function refreshCurrent(){ loadValues(); }
+
+function render(){
+  var c = document.getElementById("content");
+  var p = PAGES[state.page];
+  var html = '<div class="page-title">' + p.title + '</div>';
+  if(p.sub) html += '<div class="page-sub">' + p.sub + '</div>';
+  if(state.page === "currency") html += renderCurrency();
+  else if(state.page === "heroine") html += renderHeroine();
+  else if(state.page === "item") html += renderItems();
+  else if(state.page === "skill") html += renderSkills();
+  else if(state.page === "gallery") html += renderGallery();
+  else if(state.page === "about") html += renderAbout();
+  c.innerHTML = html;
+}
+
+function v(cat, id){ var d = state.values[cat]; return d && d[id] !== undefined ? d[id] : 0; }
+
+function renderCurrency(){
+  var rows = CURRENCY.map(function(it, i){
+    var emoji = ["🪙","💎","⚡","❤️","⭐"][i] || "·";
+    return '<div class="card" onclick="edit(\'currency\',\''+it.id+'\',\''+it.name+'\')">' +
+      '<span class="ico">'+emoji+'</span><div class="name">'+it.name+'</div>' +
+      '<div class="val">'+v("currency",it.id)+'</div></div>';
+  }).join("");
+  return '<div class="grid">'+rows+'</div>';
+}
+
+function renderHeroine(){
+  var h = HEROINES.map(function(it){ return rowHtml("heroine", it.id, it.name); }).join("");
+  var n = NPCS.map(function(it){ return rowHtml("npc", it.id, it.name); }).join("");
+  return '<div class="list"><div class="group-label">💕 女主角</div>'+h+'<div class="group-label">🧑‍🤝‍🧑 NPC</div>'+n+'</div>';
+}
+
+function renderItems(){
+  var rows = ITEMS.map(function(it){ return rowHtml("item", it[0], it[1]); }).join("");
+  return '<div class="btn-row"><button class="btn" onclick="setAll(\'item\',99)">🎒 全部道具 = 99</button>' +
+    '<button class="btn ghost" onclick="setAll(\'item\',999)">全部道具 = 999</button></div><div class="list" style="margin-top:14px">'+rows+'</div>';
+}
+
+function renderSkills(){
+  var rows = SKILLS.map(function(it){ return rowHtml("skill", it[0], it[1]); }).join("");
+  var sp = rowHtml("skill", "SkillPoint", "技能点 SkillPoint");
+  return '<div class="list"><div class="group-label">⭐ 技能点</div>'+sp+'<div class="group-label">⚔️ 技能等级</div>'+rows+'</div>';
+}
+
+function renderGallery(){
+  return '<div class="btn-row" style="flex-direction:column; align-items:flex-start">' +
+    '<button class="btn" onclick="unlock(\'gallery\')">📖 一键解锁全部图鉴</button>' +
+    '<button class="btn" onclick="unlock(\'costume\')">👗 解锁全部服装</button>' +
+    '<button class="btn" onclick="unlock(\'relic\')">🏺 解锁全部遗物</button>' +
+    '<div class="empty" style="padding:20px 0">解锁后进入对应界面即可看到效果</div></div>';
+}
+
+function renderAbout(){
+  return '<div class="about">' +
+    '<div class="big">🍺 Rebirth Pub 修改器</div>' +
+    '<div class="row-item">版本 v1.0 &nbsp;·&nbsp; 对应游戏版本 0.65</div>' +
+    '<div class="row-item">本修改器完全免费且开源，地址：<a href="#" onclick="openUrl(\'https://github.com/AlanYyh/RebirthPubTrainer\');return false;">https://github.com/AlanYyh/RebirthPubTrainer</a></div>' +
+    '<div class="row-item">（该项目地址在海外，需要梯子访问）</div>' +
+    '<div class="row-item">如果你是收费获取，投诉你的卖家。</div>' +
+    '<div class="row-item">如果修改器有问题，请向作者提交 issues。</div>' +
+    '<div class="qr-box"><div><img src="{{QR1}}"><div class="qr-cap">赞赏码 1</div></div>' +
+    '<div><img src="{{QR2}}"><div class="qr-cap">赞赏码 2</div></div></div>' +
+    '</div>';
+}
+
+function rowHtml(cat, id, name){
+  return '<div class="row" onclick="edit(\''+cat+'\',\''+id+'\',\''+name+'\')">' +
+    '<span class="nm">'+name+'</span><span class="vl">'+v(cat,id)+' <span class="pen">✏️</span></span></div>';
+}
+
+function edit(cat, id, name){
+  var cur = v(cat, id);
+  document.getElementById("m-title").textContent = "修改 " + name;
+  document.getElementById("m-cur").textContent = "当前值：" + cur;
+  var inp = document.getElementById("m-input");
+  inp.value = cur;
+  document.getElementById("modal").classList.add("show");
+  inp.focus(); inp.select();
+  window._edit = {cat:cat, id:id};
+}
+
+function closeModal(){ document.getElementById("modal").classList.remove("show"); }
+
+document.getElementById("m-ok").onclick = function(){
+  var val = parseInt(document.getElementById("m-input").value, 10);
+  if(isNaN(val)){ toast("请输入有效数字", false); return; }
+  post({type:"set", category:window._edit.cat, id:window._edit.id, value:val});
+  closeModal();
+};
+document.getElementById("m-cancel").onclick = closeModal;
+document.getElementById("modal").onclick = function(e){ if(e.target === this) closeModal(); };
+document.getElementById("m-input").addEventListener("keydown", function(e){ if(e.key === "Enter") document.getElementById("m-ok").click(); });
+
+function setAll(target, value){ post({type:"setall", target:target, value:value}); }
+function unlock(what){ post({type:"unlock", what:what}); }
+function openUrl(url){ post({type:"open", url:url}); }
+
+document.querySelectorAll(".nav").forEach(function(b){ b.onclick = function(){ switchPage(b.dataset.page); }; });
+
+// floating particles
+(function(){
+  var wrap = document.getElementById("bg-particles");
+  var colors = ["#6c5ce7","#00d2ff","#ff5da2","#2ecc71"];
+  for(var i=0;i<26;i++){
+    var d = document.createElement("div");
+    d.className = "p";
+    var s = 4 + Math.random()*10;
+    d.style.width = s+"px"; d.style.height = s+"px";
+    d.style.left = (Math.random()*100)+"%";
+    d.style.background = colors[Math.floor(Math.random()*colors.length)];
+    d.style.animationDuration = (12 + Math.random()*20)+"s";
+    d.style.animationDelay = (-Math.random()*30)+"s";
+    wrap.appendChild(d);
+  }
+})();
+
+// init
+post({type:"hello"});
+switchPage("currency");
+setInterval(function(){ refreshCurrent(); }, 2500);
+</script>
+</body>
+</html>
