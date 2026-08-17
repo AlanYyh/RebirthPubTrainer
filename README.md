@@ -1,11 +1,12 @@
 # Rebirth Pub Trainer
 
-《Rebirth Pub》单机游戏的修改工具，免费、开源。
+《Rebirth Pub》游戏的修改工具
 
 ## 游戏介绍
-《转生居酒屋 / 转生酒馆》（Rebirth Pub）游戏以异世界转生为背景，融合酒馆/旅店经营、多角色养成、沙盒冒险与动态演出内容，由 Seikou Soft. 开发、HimitsuCP 发行的互动模拟经营SLG（Simulation Life Game）游戏，目前处于持续更新状态，如果该修改器，无法使用，请提交issues（介绍是百科说的）
+《转生居酒屋 / 重生酒馆》（Rebirth Pub）游戏以异世界转生为背景，融合酒馆/旅店经营、多角色养成、沙盒冒险与动态演出内容，由 Seikou Soft. 开发、HimitsuCP 发行的互动模拟经营SLG（Simulation Life Game）游戏，目前处于持续更新状态，如果该修改器，无法使用，请提交issues（介绍是百科说的）
 
-## 建议先自行游玩，卡住了，再用修改 ##
+
+## 最好建议先自行游玩，卡住了，再用修改 ##
 
 
 功能
@@ -23,16 +24,5 @@
 ## 版本
 
 - 修改器版本：1.0
-- 对应游戏版本：0.65
-
-## 构建
-
-需要：
-
-- Windows 与 .NET Framework 4.x（系统自带）
-- 游戏本体（编译插件时需要引用游戏的 Managed 程序集）
-- BepInEx 5.x
-- WebView2 SDK（NuGet 包 `Microsoft.Web.WebView2`，解压后填到脚本里的 `$webView2Dir`）
-
-编译脚本见 `build/` 目录，使用前请把脚本中的路径改成你的实际路径。
+- 对应游戏版本：0.65（2026.8.18测试 1.02版本也可用）
 
